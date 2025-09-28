@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const tutorController_1 = require("../controllers/tutorController");
+const tutorRouter = (0, express_1.Router)();
+tutorRouter.get('/all-tutors', tutorController_1.getAllTutors);
+tutorRouter.get('/find-a-tutor', tutorController_1.findATutor);
+tutorRouter.get('/:id', tutorController_1.getTutorById);
+tutorRouter.post('/contact-tutor', tutorController_1.contactTutor);
+exports.default = tutorRouter;
