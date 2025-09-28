@@ -240,7 +240,7 @@ const ContactPage = () => {
     try {
       // NOTE: This fetch call points to a localhost server, which will not work in this environment.
       // You would need to replace this with a valid, live API endpoint.
-      const response = await fetch("http://localhost:5000/api/v1/contact", {
+      const response = await fetch("https://enkwil-foundation.onrender.com/api/v1/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

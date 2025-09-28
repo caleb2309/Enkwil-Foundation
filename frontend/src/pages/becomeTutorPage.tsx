@@ -75,7 +75,7 @@ const BecomeTutorPage = () => {
 
     try {
       // API call to submit the form data
-      const response = await fetch('http://localhost:5000/api/v1/tutor-applications', {
+      const response = await fetch('https://enkwil-foundation.onrender.com/api/v1/tutor-applications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

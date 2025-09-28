@@ -34,7 +34,7 @@ const AuthPage = () => {
   // Hardcoded sign-in function
   const handleSignIn = async (email, password) => {
     try {
-      const response = await fetch('http://localhost:5000/api/v1/auth/sign-in', {
+      const response = await fetch('https://enkwil-foundation.onrender.com/api/v1/auth/sign-in', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const AuthPage = () => {
   // Hardcoded sign-up function
   const handleSignUp = async (name, email, password) => {
     try {
-      const response = await fetch('http://localhost:5000/api/v1/auth/sign-up', {
+      const response = await fetch('https://enkwil-foundation.onrender.com/api/v1/auth/sign-up', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -163,7 +163,7 @@ const AuthPage = () => {
   const testConnection = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/v1/auth/sign-in', {
+      const response = await fetch('https://enkwil-foundation.onrender.com/api/v1/auth/sign-in', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

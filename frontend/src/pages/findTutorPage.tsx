@@ -139,7 +139,7 @@ const FindTutorPage = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('http://localhost:5000/api/v1/tutor/all-tutors');
+      const response = await fetch('https://enkwil-foundation.onrender.com/api/v1/tutor/all-tutors');
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -202,7 +202,7 @@ const FindTutorPage = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('http://localhost:5000/api/v1/tutor/find-a-tutor', {
+      const response = await fetch('https://enkwil-foundation.onrender.com/api/v1/tutor/find-a-tutor', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

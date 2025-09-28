@@ -35,7 +35,7 @@ const TutorProfilePage = () => {
     const fetchTutor = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:5000/api/v1/tutors/${id}`);
+        const response = await fetch(`https://enkwil-foundation.onrender.com/api/v1/tutors/${id}`);
         const data = await response.json();
         if (response.ok) {
           setTutor(data.tutor);
@@ -64,7 +64,7 @@ const TutorProfilePage = () => {
     setContactSuccess(false);
 
     try {
-      const response = await fetch('http://localhost:5000/api/v1/contact-tutor', {
+      const response = await fetch('https://enkwil-foundation.onrender.com/api/v1/contact-tutor', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
