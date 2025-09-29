@@ -3,20 +3,20 @@ import bcrypt from 'bcrypt';
 
 // Define the document interface for type safety
 export interface IUser extends Document {
-  name;
-  email;
-  password?;
+  name: string;
+  email: string;
+  password?: string;
   role: 'student' | 'tutor' | 'admin';
   tutorProfile?: Schema.Types.ObjectId;
 }
 
 const UserSchema: Schema = new Schema(
   {
-    name: { type, required: true },
-    email: { type, required: true, unique: true },
-    password: { type, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     role: {
-      type,
+      type: String,
       enum: ['student', 'tutor', 'admin'],
       required: true,
     },

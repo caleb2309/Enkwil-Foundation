@@ -42,12 +42,20 @@ exports.getAllTutors = getAllTutors;
 const findATutor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { detail } = req.body;
     try {
-        const tutor = yield User_js_1.User.find({ courses: detail });
-        if (!tutor) {
-            const tutor = yield User_js_1.User.find({ name: detail });
+        // Search in courses first, then in name
+        const tutorsByCourse = yield User_js_1.User.find({
+            role: 'tutor',
+            'tutorProfile.courses': { $regex: detail, $options: 'i' }
+        }).populate('tutorProfile');
+        if (tutorsByCourse.length > 0) {
+            return res.json(tutorsByCourse);
         }
-        ;
-        res.json(tutor);
+        // If no tutors found by course, search by name
+        const tutorsByName = yield User_js_1.User.find({
+            role: 'tutor',
+            name: { $regex: detail, $options: 'i' }
+        }).populate('tutorProfile');
+        res.json(tutorsByName);
     }
     catch (err) {
         console.error(err.message);

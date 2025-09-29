@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.applyTutor = exports.loginAdmin = exports.loginUser = exports.signupStudent = void 0;
+exports.applyTutor = exports.loginUser = exports.signupAdmin = exports.signupStudent = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const User_js_1 = require("../models/User.js");
@@ -48,26 +48,72 @@ const signupStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.signupStudent = signupStudent;
-// @route   POST /api/auth/login
-// @desc    Log in an existing user (student or tutor)
-// @access  Public
-const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
+//for one time use to sign up admin
+const signupAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, email, password } = req.body;
     try {
         let user = yield User_js_1.User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ msg: 'Invalid Credentials' });
+        if (user) {
+            return res.status(400).json({ msg: 'User with this email already exists' });
         }
-        const isMatch = yield bcrypt_1.default.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid Credentials' });
-        }
+        user = new User_js_1.User({ name, email, password, role: 'admin' });
+        yield user.save();
         const payload = {
             user: { id: user.id, role: user.role }
         };
-        jsonwebtoken_1.default.sign(payload, JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+        jsonwebtoken_1.default.sign(payload, ADMIN_JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
             if (err)
                 throw err;
+            res.status(201).json({ token, user: { id: user.id, name: user.name, role: user.role } });
+        });
+    }
+    catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+exports.signupAdmin = signupAdmin;
+// @route   POST /api/auth/login
+// @desc    Log in an existing user (student or tutor)
+// @access  Public
+// Assuming User, Request, Response, bcrypt, jwt, JWT_SECRET, and ADMIN_JWT_SECRET are imported/defined.
+// @route   POST /api/auth/login
+// @desc    Log in an existing user (student, tutor, or admin)
+// @access  Public
+const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    // Determine the JWT Secret and the role check message
+    let jwtSecret;
+    let invalidCredentialsMsg = 'Invalid Credentials';
+    try {
+        // 1. Find the user by email
+        let user = yield User_js_1.User.findOne({ email });
+        // 2. Initial validation: check if user exists
+        if (!user) {
+            return res.status(400).json({ msg: invalidCredentialsMsg });
+        }
+        // 3. Password validation
+        const isMatch = yield bcrypt_1.default.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ msg: invalidCredentialsMsg });
+        }
+        // 4. Determine which JWT secret to use based on the user's role
+        if (user.role === 'admin') {
+            jwtSecret = ADMIN_JWT_SECRET;
+        }
+        else {
+            // For 'student', 'tutor', or any other non-admin role
+            jwtSecret = JWT_SECRET;
+        }
+        // 5. Create payload
+        const payload = {
+            user: { id: user.id, role: user.role }
+        };
+        // 6. Sign the JWT with the determined secret
+        jsonwebtoken_1.default.sign(payload, jwtSecret, { expiresIn: '1h' }, (err, token) => {
+            if (err)
+                throw err;
+            // 7. Respond with the token and essential user data
             res.json({ token, user: { id: user.id, name: user.name, role: user.role } });
         });
     }
@@ -77,35 +123,6 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.loginUser = loginUser;
-// @route   POST /api/auth/admin/login
-// @desc    Log in the admin user
-// @access  Public
-const loginAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
-    try {
-        let user = yield User_js_1.User.findOne({ email });
-        if (!user || user.role !== 'admin') {
-            return res.status(400).json({ msg: 'Invalid Credentials' });
-        }
-        const isMatch = yield bcrypt_1.default.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid Credentials' });
-        }
-        const payload = {
-            user: { id: user.id, role: user.role }
-        };
-        jsonwebtoken_1.default.sign(payload, ADMIN_JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
-            if (err)
-                throw err;
-            res.json({ token, user: { id: user.id, name: user.name, role: user.role } });
-        });
-    }
-    catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
-    }
-});
-exports.loginAdmin = loginAdmin;
 // @route   POST /api/auth/tutor/apply
 // @desc    Submit a new tutor application
 // @access  Public
