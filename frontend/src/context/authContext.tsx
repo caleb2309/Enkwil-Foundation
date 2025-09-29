@@ -1,16 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
-  id: string;
-  name: string;
-  email: string;
+  id;
+  name;
+  email;
   role: 'student' | 'tutor' | 'admin';
 }
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
-  login: (userData: User, token: string) => void;
+  token | null;
+  login: (userData: User, token) => void;
   logout: () => void;
   loading: boolean;
 }
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setLoading(false);
   }, []);
 
-  const login = (userData: User, authToken: string) => {
+  const login = (userData: User, authToken) => {
     setUser(userData);
     setToken(authToken);
     localStorage.setItem('token', authToken);

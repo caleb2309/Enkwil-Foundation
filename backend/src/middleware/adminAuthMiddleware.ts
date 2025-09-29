@@ -34,6 +34,7 @@ const adminAuthMiddleware = (req: Request, res: Response, next: NextFunction) =>
     }
     next();
   } catch (err) {
+console.error(err);
     res.status(401).json({ msg: 'Token is not valid' });
   }
 };

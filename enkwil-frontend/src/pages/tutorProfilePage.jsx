@@ -45,6 +45,7 @@ const TutorProfilePage = () => {
       } catch (err) {
 console.error(err);
         setError('An error occurred. Please try again.');
+        console.error(err);
       } finally {
         setLoading(false);
       }

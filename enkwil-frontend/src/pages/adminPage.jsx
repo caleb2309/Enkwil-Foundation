@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import {
   Users,
@@ -116,11 +116,6 @@ console.error(err);
     value,
     icon: Icon,
     gradient,
-  }: {
-    title;
-    value;
-    icon: any;
-    gradient;
   }) => (
     <div
       className={`relative rounded-xl p-6 flex items-center space-x-4 overflow-hidden transform hover:scale-105 transition-all card-shine ${gradient}`}
